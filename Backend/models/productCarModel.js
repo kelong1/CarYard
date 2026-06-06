@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const productCarSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -15,6 +20,7 @@ const productCarSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
+    required: true,
   },
 });
 

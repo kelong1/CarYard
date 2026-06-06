@@ -23,7 +23,7 @@ const Car = ({ car }) => {
       {/* IMAGE SECTION */}
       <div className="w-full h-56 bg-gray-100 overflow-hidden">
         <img
-          src={`http://localhost:5000${car.imageUrl}`}
+          src={car.imageUrl}
           alt={car.name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />

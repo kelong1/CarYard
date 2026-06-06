@@ -2,15 +2,25 @@ const ProductCar = require("../models/productCarModel");
 const multer = require("multer");
 const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../uploads"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, path.join(__dirname, "../uploads"));
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   },
+// });
+
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../cloudinary");
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "mern_uploads",
+    allowed_formats: ["jpg", "png", "jpeg"],
   },
 });
-
 const upload = multer({ storage: storage });
 
 const getAllProductCars = async (req, res) => {
@@ -41,10 +51,15 @@ const createProductCar = async (req, res) => {
       name: req.body.name,
       price: req.body.price,
       description: req.body.description,
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
+      imageUrl: req.file ? req.file.path : null, // Store the path of the uploaded image
     });
     const savedProductCar = await productCar.save();
-    res.status(201).json(savedProductCar);
+    res
+      .status(201)
+      .json({
+        message: "ProductCar created successfully",
+        createdProductCar: savedProductCar,
+      });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -55,13 +70,7 @@ const updateProductCar = async (req, res) => {
     const productCar = await ProductCar.findByIdAndUpdate(
       req.params.id,
       {
-        userId: req.user._id,
-        name: req.body.name,
-        price: req.body.price,
-        description: req.body.description,
-        imageUrl: req.file
-          ? `/uploads/${req.file.filename}`
-          : req.body.imageUrl, // Use existing imageUrl if no new file is uploaded
+        imageUrl: req.file ? req.file.path : req.body.imageUrl, // Use existing imageUrl if no new file is uploaded
       },
       { new: true },
     );
