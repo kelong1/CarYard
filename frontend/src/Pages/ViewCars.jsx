@@ -1,10 +1,10 @@
 import React from "react";
 import { useFetchCarsQuery } from "../features/Products/productApi";
 import Car from "./Car";
-import { useSelector } from "react-redux";
+
 
 const ViewCars = () => {
-  const user = useSelector((state) => state.authReducer.user);
+
   const { data: cars = [], isLoading, isError } = useFetchCarsQuery();
 
   if (isLoading) {
