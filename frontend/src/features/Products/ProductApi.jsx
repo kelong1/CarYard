@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const fetchCarsApi = createApi({
   reducerPath: "Cars",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/productcars",
+    baseUrl: "https://caryard-acq2.onrender.com/api/productcars",
     prepareHeaders: (headers) => {
       const user = JSON.parse(localStorage.getItem("user"));
 
